@@ -1,0 +1,30 @@
+version: '3.5'
+
+networks:
+  micro-services:
+    name: micro-services-net
+    driver: bridge
+
+services:
+  zookeeper:
+    image: zookeeper:3.4.9
+    ports:
+      - "2181:2181"
+    networks:
+      - micro-services
+
+
+  kafka:
+    image: wurstmeister/kafka:2.12-2.1.1
+    environment:
+      KAFKA_BROKER_ID: 1
+      HOSTNAME_COMMAND: "/sbin/ip route|awk '/default/ { print $$3 }'"
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "test_events:1:1"
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    networks:
+      - micro-services
