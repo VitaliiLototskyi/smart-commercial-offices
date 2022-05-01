@@ -7,7 +7,6 @@ public enum DeviceType {
     AC("ac"),
     LIGHT_BULB("light_bulb"),
     DETECTORS("detectors"),
-    PC("pc"),
     WATER_ANALYZER("water_analyzer"),
     VACUUM_CLEANER("vacuum_cleaner"),
     ROUTER("router");

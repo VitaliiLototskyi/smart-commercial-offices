@@ -1,6 +1,5 @@
 package com.microservices.datageneratorservice.controller;
 
-import com.microservices.datageneratorservice.model.Message;
 import com.microservices.datageneratorservice.services.ProducerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class ProducerController {
     // Publish messages using the GetMapping
     @GetMapping("/publish/{count}")
     public String publishMessage(@PathVariable("count") final int count) {
-        logger.info("Total number of records to send :" + count);
+        logger.info("Total number of records to send per office:" + count);
         for (int i = 1; i <= count; i++) {
             producerService.produce(topic);
             logger.info("Send record number: " + i);
