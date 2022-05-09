@@ -1,6 +1,5 @@
 package com.microservices.datageneratorservice.controller;
 
-import com.jezhumble.javasysmon.JavaSysMon;
 import com.microservices.datageneratorservice.services.ProducerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
 
 @RestController
 public class ProducerController {

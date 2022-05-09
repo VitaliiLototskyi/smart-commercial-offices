@@ -1,0 +1,60 @@
+version: '3.5'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.1.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:7.1.0
+    hostname: broker
+    container_name: broker
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      #TOPIC_AUTO_CREATE: true
+
+  kafka-setup:
+    image: confluentinc/cp-kafka:7.1.0
+    hostname: kafka-setup
+    container_name: kafka-setup
+    depends_on:
+      - broker
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                        cub kafka-ready -b broker:9092 1 20 && \
+                        kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic test_events'"
+    environment:
+      # The following settings are listed here only to satisfy the image's requirements.
+      # We override the image's `command` anyways, hence this container will not start a broker.
+
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
+
+  data-generator:
+    build:
+      context: .
+    hostname: data-generator
+    container_name: data-generator
+    depends_on:
+      - broker
+    ports:
+      - 8000:8000
+    environment:
+      - SERVER_PORT=8000
+      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=broker:29092
+      - spring.kafka.producer.bootstrap-servers=broker:29092
+    command: java -jar data-generator-service.jar
