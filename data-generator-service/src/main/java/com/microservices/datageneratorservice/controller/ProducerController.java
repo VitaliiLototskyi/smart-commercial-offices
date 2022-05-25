@@ -1,13 +1,19 @@
 package com.microservices.datageneratorservice.controller;
 
+import com.microservices.datageneratorservice.model.Device;
+import com.microservices.datageneratorservice.model.DeviceWrapper;
 import com.microservices.datageneratorservice.services.ProducerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class ProducerController {
@@ -20,35 +26,11 @@ public class ProducerController {
     @Autowired
     private ProducerService producerService;
 
-    // Publish messages using the GetMapping
-    @GetMapping("/publish/{count}")
-    public String publishMessage(@PathVariable("count") final int count) {
-        logger.info("Total number of records to send per office:" + count);
-        for (int i = 1; i <= count; i++) {
-            producerService.produce(topic);
-            logger.info("Send record number: " + i);
-        }
+    @GetMapping("/generateData/kyiv/")
+    public ResponseEntity<DeviceWrapper> sendData() {
+        List<Device> deviceList = producerService.produceData("kyiv");
+        DeviceWrapper deviceWrapper = new DeviceWrapper(deviceList);
 
-        return "Published Successfully";
-    }
-
-    @GetMapping("/generate/")
-    public String generateMessage() {
-        logger.info("Generation of messages is ON");
-
-        int recordCounter = 0;
-        while (isOn) {
-            producerService.produce(topic);
-            recordCounter++;
-        }
-        logger.info("Generated {} record(s)", recordCounter);
-        return "Published";
-    }
-
-    @GetMapping("/changeState/{state}")
-    public String changeState(@PathVariable("state") final boolean state) {
-        isOn = state;
-
-        return "State changed";
+        return new ResponseEntity<DeviceWrapper>(deviceWrapper, HttpStatus.OK);
     }
 }

@@ -1,19 +1,17 @@
 package com.microservices.datageneratorservice.services;
 
-import com.microservices.datageneratorservice.model.DeviceType;
-import com.microservices.datageneratorservice.model.KafkaMessage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
+import com.microservices.datageneratorservice.model.DataCenter;
+import com.microservices.datageneratorservice.model.Device;
+import com.microservices.datageneratorservice.utils.DataGenerator;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProducerService {
-    @Autowired
-    private KafkaTemplate<String, KafkaMessage> kafkaTemplate;
+    public List<Device> produceData(String dataCenter) {
 
-    public void produce(String topic) {
-        for (DeviceType deviceType : DeviceType.values()) {
-            kafkaTemplate.send(topic, KafkaMessage.generateMessage(deviceType));
-        }
+        return new ArrayList<>(DataGenerator.generateDevices(DataCenter.getDataCenterName(dataCenter)));
     }
 }

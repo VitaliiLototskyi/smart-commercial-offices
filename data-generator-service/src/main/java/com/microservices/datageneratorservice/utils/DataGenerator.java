@@ -7,9 +7,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class DataGenerator {
     private static final DateTimeFormatter patternForQuery = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'");
@@ -76,5 +74,30 @@ public class DataGenerator {
         LocalDateTime ldt = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
 
         return ldt.format(patternForQuery);
+    }
+
+    public static List<Device> generateDevices(DataCenter dataCenter) {
+        secureRandom = new SecureRandom();
+        List<Device> deviceList = new ArrayList<>();
+        for (DeviceType deviceType : DeviceType.values()) {
+                Device device = new Device();
+                device.setUuid(deviceType.uuid);
+
+                device.setDataCenter(dataCenter.name);
+
+                device.setDeviceType(deviceType.name);
+                device.setDateTime(getFormattedToDate());
+                device.setDeviceIP(dataCenter.centerIP);
+                if (secureRandom.nextInt(1000) % 400 == 0) {
+                    device.setDeviceState(DeviceState.OFF.name());
+                    device.setDeviceMetrics(generateMetricsPerDeviceState(DeviceState.OFF));
+                } else {
+                    device.setDeviceState(DeviceState.ON.name());
+                    device.setDeviceMetrics(generateMetricsPerDeviceState(DeviceState.ON));
+                }
+                deviceList.add(device);
+            }
+
+        return deviceList;
     }
 }

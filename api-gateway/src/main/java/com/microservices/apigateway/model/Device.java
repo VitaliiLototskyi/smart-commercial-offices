@@ -1,4 +1,4 @@
-package com.microservices.datageneratorservice.model;
+package com.microservices.apigateway.model;
 
 import java.util.Map;
 
