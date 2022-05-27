@@ -1,82 +1,58 @@
 package com.microservices.datageneratorservice.model;
 
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.microservices.datageneratorservice.model.enums.DeviceConnectionType;
+import com.microservices.datageneratorservice.model.enums.DeviceState;
+import com.microservices.datageneratorservice.model.enums.DeviceType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+@Entity
 public class Device {
+
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
     private String uuid;
-    private Map<DeviceMetricsType, String> deviceMetrics;
-    private String dataCenter;
-    private String deviceState;
-    private String deviceType;
-    private String dateTime;
-    private String deviceIP;
 
-    @Override
-    public String toString() {
-        return "Device{" +
-                "uuid='" + uuid + '\'' +
-                ", deviceMetrics=" + deviceMetrics +
-                ", dataCenter='" + dataCenter + '\'' +
-                ", deviceState='" + deviceState + '\'' +
-                ", deviceType='" + deviceType + '\'' +
-                ", dateTime='" + dateTime + '\'' +
-                ", deviceIP='" + deviceIP + '\'' +
-                '}';
-    }
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_office")
+    private Office office;
 
-    public String getUuid() {
-        return uuid;
-    }
+    private DeviceState deviceState;
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+    private DeviceType deviceType;
 
-    public Map<DeviceMetricsType, String> getDeviceMetrics() {
-        return deviceMetrics;
-    }
+    private LocalDateTime dateTime;
 
-    public void setDeviceMetrics(Map<DeviceMetricsType, String> deviceMetrics) {
-        this.deviceMetrics = deviceMetrics;
-    }
+    private String ipAddress;
 
-    public String getDataCenter() {
-        return dataCenter;
-    }
+    private Integer batteryLevel;
 
-    public void setDataCenter(String dataCenter) {
-        this.dataCenter = dataCenter;
-    }
+    private Long workingTimeMin;
 
-    public String getDeviceState() {
-        return deviceState;
-    }
+    private String modelName;
 
-    public void setDeviceState(String deviceState) {
-        this.deviceState = deviceState;
-    }
+    private DeviceConnectionType connectionType;
 
-    public String getDeviceType() {
-        return deviceType;
-    }
-
-    public void setDeviceType(String deviceType) {
-        this.deviceType = deviceType;
-    }
-
-    public String getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public String getDeviceIP() {
-        return deviceIP;
-    }
-
-    public void setDeviceIP(String deviceIP) {
-        this.deviceIP = deviceIP;
-    }
+    private Integer signalStrength;
 }

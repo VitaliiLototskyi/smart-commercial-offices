@@ -1,15 +1,19 @@
 package com.microservices.datageneratorservice.utils;
 
-import com.microservices.datageneratorservice.model.*;
+import com.microservices.datageneratorservice.model.enums.DeviceMetricsType;
+import com.microservices.datageneratorservice.model.enums.DeviceState;
 
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class DataGenerator {
+
     private static final DateTimeFormatter patternForQuery = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'");
     private static final int MAX_NUMBER_FOR_IP = 256;
     private static final int MAX_VALUE = 100000;
@@ -34,11 +38,17 @@ public class DataGenerator {
                 deviceMetrics.put(DeviceMetricsType.POWER_USAGE, twoNumbersToString(secureRandom.nextInt(10), secureRandom.nextInt(MAX_VALUE)));
                 deviceMetrics.put(DeviceMetricsType.VOLTAGE_USAGE, twoNumbersToString(220 - secureRandom.nextInt(20), secureRandom.nextInt(MAX_VALUE)));
                 deviceMetrics.put(DeviceMetricsType.INTENSITY, twoNumbersToString(secureRandom.nextInt(20), secureRandom.nextInt(MAX_VALUE)));
+                deviceMetrics.put(DeviceMetricsType.WATER_USAGE, twoNumbersToString(secureRandom.nextInt(100), secureRandom.nextInt(MAX_VALUE)));
+                deviceMetrics.put(DeviceMetricsType.CLEANED_AREA, twoNumbersToString(secureRandom.nextInt(100), secureRandom.nextInt(MAX_VALUE)));
+                deviceMetrics.put(DeviceMetricsType.WORKING_TIME, secureRandom.nextInt(100) + "");
                 break;
             case OFF:
                 deviceMetrics.put(DeviceMetricsType.POWER_USAGE, twoNumbersToString(0, 0));
                 deviceMetrics.put(DeviceMetricsType.VOLTAGE_USAGE, twoNumbersToString(0, 0));
                 deviceMetrics.put(DeviceMetricsType.INTENSITY, twoNumbersToString(0, 0));
+                deviceMetrics.put(DeviceMetricsType.WATER_USAGE, twoNumbersToString(0, 0));
+                deviceMetrics.put(DeviceMetricsType.CLEANED_AREA, twoNumbersToString(secureRandom.nextInt(100), secureRandom.nextInt(MAX_VALUE)));
+                deviceMetrics.put(DeviceMetricsType.WORKING_TIME, twoNumbersToString(0, 0));
                 break;
         }
 
@@ -49,26 +59,24 @@ public class DataGenerator {
         return numberOne.toString() + "." + numberTwo.toString();
     }
 
-    public static Device generateDeviceForDeviceType(DeviceType deviceType) {
+/*    public static Device generateDeviceForDeviceType(DeviceType deviceType) {
         secureRandom = new SecureRandom();
         Device device = new Device();
         device.setUuid(generateUUID());
 
-        device.setDataCenter(DataCenter.getRandomValueFromDataCenterTypeEnum());
-
         device.setDeviceType(DeviceType.getRandomValueFromDeviceTypeEnum());
         device.setDateTime(getFormattedToDate());
-        device.setDeviceIP(generateIP());
+        device.setIpAddress(generateIP());
         if (secureRandom.nextInt(1000) % 400 == 0) {
             device.setDeviceState(DeviceState.OFF.name());
-            device.setDeviceMetrics(generateMetricsPerDeviceState(DeviceState.OFF));
+            //device.setDeviceMetrics(generateMetricsPerDeviceState(DeviceState.OFF));
         } else {
             device.setDeviceState(DeviceState.ON.name());
-            device.setDeviceMetrics(generateMetricsPerDeviceState(DeviceState.ON));
+            //device.setDeviceMetrics(generateMetricsPerDeviceState(DeviceState.ON));
         }
 
         return device;
-    }
+    }*/
 
     public static String getFormattedToDate() {
         LocalDateTime ldt = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
@@ -76,7 +84,7 @@ public class DataGenerator {
         return ldt.format(patternForQuery);
     }
 
-    public static List<Device> generateDevices(DataCenter dataCenter) {
+/*    public static List<Device> generateDevices(DataCenter dataCenter) {
         secureRandom = new SecureRandom();
         List<Device> deviceList = new ArrayList<>();
         for (DeviceType deviceType : DeviceType.values()) {
@@ -85,19 +93,19 @@ public class DataGenerator {
 
                 device.setDataCenter(dataCenter.name);
 
-                device.setDeviceType(deviceType.name);
+                device.setDeviceType(deviceType);
                 device.setDateTime(getFormattedToDate());
-                device.setDeviceIP(dataCenter.centerIP);
+                device.setIpAddress(dataCenter.centerIP);
                 if (secureRandom.nextInt(1000) % 400 == 0) {
                     device.setDeviceState(DeviceState.OFF.name());
-                    device.setDeviceMetrics(generateMetricsPerDeviceState(DeviceState.OFF));
+                    //device.setDeviceMetrics(generateMetricsPerDeviceState(DeviceState.OFF));
                 } else {
                     device.setDeviceState(DeviceState.ON.name());
-                    device.setDeviceMetrics(generateMetricsPerDeviceState(DeviceState.ON));
+                    //device.setDeviceMetrics(generateMetricsPerDeviceState(DeviceState.ON));
                 }
                 deviceList.add(device);
             }
 
         return deviceList;
-    }
+    }*/
 }

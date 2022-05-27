@@ -1,0 +1,54 @@
+server:
+  port: 8002
+spring:
+  profiles:
+    active: local
+---
+spring:
+  profiles: local
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: admin
+      username: root
+      password: root
+      database: testDB
+  kafka:
+    template:
+      default-topic: 'test_events'
+    consumer:
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: data-aggregation-group
+      auto-offset-reset: latest
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+        #retries: 10
+
+---
+
+spring:
+  profiles: nonprod
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092, localhost:9093, localhost:9094
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: data-aggregation-group
+
+---
+
+spring:
+  profiles: prod
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092, localhost:9093, localhost:9094
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: data-aggregation-group
