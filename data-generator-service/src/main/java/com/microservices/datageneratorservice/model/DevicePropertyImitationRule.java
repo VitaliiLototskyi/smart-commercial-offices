@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +18,7 @@ import javax.persistence.Id;
 @Data
 @Builder
 @Entity
-public class DeviceValueBehaviourImitationRule {
+public class DevicePropertyImitationRule {
 
     @Id
     @GeneratedValue
@@ -24,7 +26,20 @@ public class DeviceValueBehaviourImitationRule {
 
     private DeviceType deviceType;
 
-    private String valueName;
+    private String property;
+
+    @ColumnDefault("false")
+    private boolean stopGenIfMin;
+
+    private String correlatedProperty;
+
+    private Double correlationCoef;
+
+    private String triggerByProp;
+
+    private Double triggerByPropVal;
+
+    private Double setValOnTriggerByProp;
 
     private Double min;
 

@@ -19,13 +19,13 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @Entity
-public class DeviceValueProperty {
+public class DevicePropertyValueDetails {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private String valueName;
+    private String property;
 
     private LocalDateTime nextUpdateTime;
 
@@ -36,4 +36,13 @@ public class DeviceValueProperty {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_device")
     private Device device;
+
+    // builds default DevicePropertyValueDetails record based on device & property
+    public DevicePropertyValueDetails(Device device, String property) {
+        this.property = property;
+        this.device = device;
+        this.nextUpdateTime = LocalDateTime.MIN;
+        this.nextChangeTypeTime = LocalDateTime.MIN;
+        this.changeType = DeviceValueChangeType.IDLE;
+    }
 }
