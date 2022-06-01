@@ -1,0 +1,23 @@
+server:
+  port: 8003
+spring:
+  profiles:
+    active: local
+---
+spring:
+  profiles: local
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/analyzer_db
+    username: analyzer
+    password: analyzer_pwd
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: admin
+      username: root
+      password: root
+      database: testDB

@@ -1,7 +1,7 @@
 version: '3'
 services:
   database:
-    image: 'mongo'
+    image: 'mongo:5.0'
     container_name: 'mongo-db-container'
     environment:
       - MONGO_INITDB_DATABASE=testDB

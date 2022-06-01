@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: analyzer-db
+    ports:
+      - 5432:5432
+    volumes:
+      - C:/Users/dserb/Desktop/pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=analyzer
+      - POSTGRES_PASSWORD=analyzer_pwd
+      - POSTGRES_DB=analyzer_db

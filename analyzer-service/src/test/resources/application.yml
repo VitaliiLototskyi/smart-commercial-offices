@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: test
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  mongodb:
+    embedded:
+      version: 5.0.0
+  data:
+    mongodb:
+      port: 0
+      database: test
